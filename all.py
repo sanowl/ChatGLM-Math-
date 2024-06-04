@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 # Configuration class to manage all settings
 class Config:
-    MODEL_NAME = "gpt-3.5-turbo"
+    MODEL_NAME = "gpt2"  # Change to a valid model identifier
     BATCH_SIZE = 4
     EPOCHS = 3
     LEARNING_RATE = 2e-5
