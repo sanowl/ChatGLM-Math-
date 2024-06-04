@@ -1,18 +1,33 @@
+import logging
 from transformers import Trainer, TrainingArguments
-from model import load_saved_model, save_model
 from data import load_and_preprocess_data
+from model import load_saved_model, save_model, MathCritiqueModel
 from config import Config
 
+# Setup logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 def rejective_fine_tuning():
+    dataset = load_and_preprocess_data()
     model, tokenizer = load_saved_model(Config.SAVE_DIR)
-    encoded_dataset = load_and_preprocess_data()
+    math_critique_model = MathCritiqueModel(Config.MODEL_NAME)
+    math_critique_model.model = model
+    math_critique_model.tokenizer = tokenizer
 
-    # Create a dataset of incorrect answers and correct answers
-    def filter_incorrect_answers(examples):
-        # Logic to filter out incorrect answers
-        return examples["answer"] != examples["correct_answer"]
+    logger.info("Performing Rejective Fine-Tuning (RFT)...")
+    refined_data = []
+    for data in dataset["train"]:
+        question, reference, answer = data['question'], data['reference'], data['answer']
+        critique, score = math_critique_model.score(question, reference, answer)
+        if score >= Config.SCORE_THRESHOLD:
+            refined_data.append(data)
 
-    incorrect_dataset = encoded_dataset.filter(filter_incorrect_answers)
+    refined_dataset = Dataset.from_dict({
+        "question": [d["question"] for d in refined_data],
+        "reference": [d["reference"] for d in refined_data],
+        "answer": [d["answer"] for d in refined_data]
+    })
 
     training_args = TrainingArguments(
         output_dir=Config.OUTPUT_DIR,
@@ -31,13 +46,14 @@ def rejective_fine_tuning():
     trainer = Trainer(
         model=model,
         args=training_args,
-        train_dataset=incorrect_dataset,
-        eval_dataset=encoded_dataset["test"],
+        train_dataset=refined_dataset,
+        eval_dataset=dataset["test"],
         tokenizer=tokenizer,
     )
-
     trainer.train()
     save_model(model, tokenizer, Config.SAVE_DIR)
+    logger.info(f"Model saved to {Config.SAVE_DIR}")
 
 if __name__ == "__main__":
     rejective_fine_tuning()
+
