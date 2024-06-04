@@ -8,10 +8,62 @@ This project implements a Self-Critique pipeline to enhance the mathematical pro
 
 ## Installation
 
-```bash
-pip install -r requirements.txt
+1. Clone the repository:
+    ```bash
+    git clone https://github.com/your_username/ChatGLM-Math.git
+    cd ChatGLM-Math
+    ```
 
+2. Create and activate a virtual environment (optional but recommended):
+    ```bash
+    python3 -m venv venv
+    source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
+    ```
 
+3. Install the required packages:
+    ```bash
+    pip install -r requirements.txt
+    ```
 
+## Usage
 
+1. **Training the Math-Critique Model:**
+    ```bash
+    python train.py
+    ```
 
+2. **Evaluating the Model:**
+    ```bash
+    python evaluate.py
+    ```
+
+3. **Performing Rejective Fine-Tuning (RFT):**
+    ```bash
+    python rft.py
+    ```
+
+4. **Performing Direct Preference Optimization (DPO):**
+    ```bash
+    python dpo.py
+    ```
+
+5. **Running the Complete Pipeline:**
+    ```bash
+    python main.py
+    ```
+
+## Project Structure
+
+- `config.py`: Configuration settings for the project.
+- `data.py`: Data loading and preprocessing functions.
+- `model.py`: Model definitions and utility functions.
+- `train.py`: Training script for the Math-Critique model.
+- `evaluate.py`: Evaluation script for the model.
+- `rft.py`: Script for performing Rejective Fine-Tuning (RFT).
+- `dpo.py`: Script for performing Direct Preference Optimization (DPO).
+- `main.py`: Main script to run the complete pipeline.
+- `utils.py`: Utility functions (currently empty, can be expanded as needed).
+
+## License
+
+MIT License
