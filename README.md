@@ -10,7 +10,7 @@ This project implements a Self-Critique pipeline to enhance the mathematical pro
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/your_username/ChatGLM-Math.git
+  [  git clone https://github.com/your_username/ChatGLM-Math.git](https://github.com/sanowl/ChatGLM-Math-.git)
     cd ChatGLM-Math
     ```
 
